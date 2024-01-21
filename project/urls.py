@@ -24,3 +24,4 @@ urlpatterns = [
 ]
 
 handler404 = 'utiles.error_handler.handler404'
+handler500 = 'utiles.error_handler.handler500'
