@@ -1,6 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.pagination import PageNumberPagination
+from rest_framework import generics
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Product
 from .serializers import ProductSerializer
@@ -18,6 +20,11 @@ def product_list(request):
     return Response({
         'data':data
     })
+
+class PostListAPI(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filterset_class = ProductFilter
 
 @api_view(['GET'])
 def product_detail(request,id):
