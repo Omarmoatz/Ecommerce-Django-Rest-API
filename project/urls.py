@@ -22,3 +22,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('product/', include('product.urls')),
 ]
+
+handler404 = 'utiles.error_handler.handler404'
