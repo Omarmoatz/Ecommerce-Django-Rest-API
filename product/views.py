@@ -1,6 +1,7 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -33,3 +34,15 @@ def product_detail(request,id):
     return Response({
         'data':data,
     })
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_product(request):
+    data = request.data
+    add_form = ProductSerializer(data=data)
+    if add_form.is_valid():
+        product = Product.objects.create(**data, user=request.user)
+        pdct = ProductSerializer(product).data
+        return Response({'data':pdct})
+    else:
+        return Response(add_form.errors)
