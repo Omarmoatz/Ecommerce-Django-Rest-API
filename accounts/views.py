@@ -37,3 +37,22 @@ def signup_api(request):
 def user_info(request):
     user = InfoSerializer(request.user).data
     return Response({'data':user})
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_profile(request):
+    user = request.user
+    data = request.data
+
+    user.first_name = data['first_name']
+    user.last_name = data['last_name']
+    user.email = data['email']
+    user.username = data['email']
+
+    if user.password != "":
+        user.password = data['password']
+            
+    user.save()
+    serial = InfoSerializer(user).data
+    return Response(serial)
