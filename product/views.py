@@ -4,9 +4,10 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics,status
 from django.shortcuts import get_object_or_404
+from django.db.models import Avg
 
-from .models import Product
-from .serializers import ProductSerializer
+from .models import Product,Review
+from .serializers import ProductSerializer,ReviewSerializer
 from .filters import ProductFilter
 
 @api_view(['GET'])
@@ -82,3 +83,36 @@ def delete_product(request,id):
     product.delete()
     return Response({'detail':'you deleted this item successfully'},
                     status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_review(request,id):
+    user = request.user
+    product = get_object_or_404(Product,id=id)
+    data = request.data
+    review = product.product_review.filter(user=user)
+    
+    rate = int(data['rate'])
+    if rate <= 0 or rate > 10 :
+        return Response({'details':'please make sure you adjust the rate between 0 and 10'})
+
+    elif review.exists():
+        new_review = {'rate':data['rate'],'content':data['content']}
+        review.update(**new_review)
+
+        ratings = product.product_review.aggregate(avg_rate=Avg('rate'))
+        product.rating = ratings['avg_rate']
+        product.save()
+        return Response({'data':'product review updated'})
+    else:
+        reviews = Review.objects.create(
+            user = user,
+            product = product,
+            rate = data['rate'],
+            content = data['content']
+        )
+        ratings = product.product_review.aggregate(avg_rate=Avg('rate'))
+        product.rating = ratings['avg_rate']
+        product.save()
+        serial = ReviewSerializer(reviews).data
+        return Response({'data':serial})
