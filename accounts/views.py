@@ -1,5 +1,9 @@
+from datetime import datetime,timedelta
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+from django.utils.crypto import get_random_string
+from django.core.mail import send_mail
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
 from rest_framework import status
@@ -56,3 +60,25 @@ def update_profile(request):
     user.save()
     serial = InfoSerializer(user).data
     return Response(serial)
+
+@api_view(['POST'])
+def forgot_password(request):
+    data = request.data
+    user = get_object_or_404(User,email=data['email'])
+    
+    token = get_random_string(40)
+    expire_date = datetime.now() + timedelta(minutes=30)
+
+    user.user_profile.reset_password_token = token
+    user.user_profile.reset_password_expire = expire_date
+    user.save()
+
+    link = f"http://127.0.0.1:8000/accounts/reset_password/{token}"
+
+    send_mail(
+        "Reset Password",
+        f"your reset password link : {link}",
+        "omar@gmail.com",
+        [data['email']]
+    )
+    return Response({'detail':'sent the mail successfully'})

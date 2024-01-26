@@ -6,4 +6,5 @@ urlpatterns = [
     path('signup', views.signup_api ),
     path('get_info', views.user_info ),
     path('update', views.update_profile ),
+    path('forgot_password/', views.forgot_password ),
 ]
