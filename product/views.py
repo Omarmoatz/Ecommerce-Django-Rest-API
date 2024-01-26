@@ -92,7 +92,7 @@ def create_review(request,id):
     data = request.data
     review = product.product_review.filter(user=user)
     
-    rate = int(data['rate'])
+    rate = float(data['rate'])
     if rate <= 0 or rate > 10 :
         return Response({'details':'please make sure you adjust the rate between 0 and 10'})
 
@@ -116,3 +116,26 @@ def create_review(request,id):
         product.save()
         serial = ReviewSerializer(reviews).data
         return Response({'data':serial})
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_review(request,id,pk):
+    product = get_object_or_404(Product,id=id)
+    review = product.product_review.filter(user=request.user,id=pk)
+
+    if review.exists():
+        review.delete()
+        rating = product.product_review.aggregate(avg_rate=Avg('rate'))
+        if rating['avg_rate'] is None:
+            rating['avg_rate'] = 0
+            product.rating = rating['avg_rate']
+            product.save()
+            return Response({'detail':'review deleted successfully'})
+        else:
+            product.rating = rating['avg_rate']
+            product.save()
+            return Response({'detail':'review deleted successfully'})
+
+    else:
+        return Response({'detail':'there is no reviews on this product or the review id is invalid'},
+                        status=status.HTTP_404_NOT_FOUND)

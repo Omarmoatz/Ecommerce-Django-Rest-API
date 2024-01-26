@@ -15,6 +15,8 @@ class ProductSerializer(serializers.ModelSerializer):
         return serial
 
 class ReviewSerializer(serializers.ModelSerializer):
+    product = serializers.StringRelatedField()
+    user = serializers.StringRelatedField()
     class Meta:
         model = Review
         fields = '__all__'

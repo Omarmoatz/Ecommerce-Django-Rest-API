@@ -11,6 +11,7 @@ urlpatterns = [
 
     # Review API
     path('review/add/<int:id>/', views.create_review),
+    path('review/<int:id>/delete/<int:pk>/', views.delete_review),
 
     # CBV
     path('cbv/', views.PostListAPI.as_view()),
