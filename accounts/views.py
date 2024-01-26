@@ -55,7 +55,7 @@ def update_profile(request):
     user.username = data['email']
 
     if user.password != "":
-        user.password = data['password']
+        user.password = make_password(data['password'])
             
     user.save()
     serial = InfoSerializer(user).data
@@ -71,9 +71,9 @@ def forgot_password(request):
 
     user.user_profile.reset_password_token = token
     user.user_profile.reset_password_expire = expire_date
-    user.save()
+    user.user_profile.save()
 
-    link = f"http://127.0.0.1:8000/accounts/reset_password/{token}"
+    link = f"http://127.0.0.1:8000/accounts/reset_password/{token}/"
 
     send_mail(
         "Reset Password",
@@ -82,3 +82,23 @@ def forgot_password(request):
         [data['email']]
     )
     return Response({'detail':'sent the mail successfully'})
+
+@api_view(['POST'])
+def reset_password(request,token):
+    data = request.data
+    user = get_object_or_404(User,user_profile__reset_password_token = token)
+
+    if data['password'] != data['confirm_password']:
+        return Response({'error':'the passwords are not the same '})
+    
+    if user.user_profile.reset_password_expire.replace(tzinfo=None) < datetime.now():
+        return Response({'error':'the token had expired'})
+    
+    user.user_profile.reset_password_token = ""
+    user.user_profile.reset_password_expire = None
+    user.user_profile.save()
+
+    user.password = make_password(data['password'])
+    user.save()
+
+    return Response({'detail':'Reset the Password Successfully'})
