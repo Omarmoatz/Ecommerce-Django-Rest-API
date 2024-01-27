@@ -3,7 +3,7 @@ from rest_framework import serializers
 from .models import *
 
 class OrderSerializer(serializers.ModelSerializer):
-    orders = serializers.SerializerMethodField(method_name='order_details')
+    order_detail = serializers.SerializerMethodField(method_name='order_details')
     class Meta:
         model = Orders
         fields = '__all__'

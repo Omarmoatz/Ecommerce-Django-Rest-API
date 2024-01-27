@@ -3,4 +3,6 @@ from . import views
 
 urlpatterns = [
     path('create/', views.create_order),
+    path('list/', views.order_list),
+
 ]
