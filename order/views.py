@@ -16,6 +16,14 @@ def order_list(request):
     return Response({'data':serializer},
                     status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def order_detail(request,id):
+    order = get_object_or_404(Orders,id=id)
+    serializer = OrderSerializer(order).data
+    return Response({'data':serializer},
+                    status=status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
