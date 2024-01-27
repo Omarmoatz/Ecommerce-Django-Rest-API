@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework import generics,status
 from django.shortcuts import get_object_or_404
 from django.db.models import Avg
@@ -41,7 +41,7 @@ def product_detail(request,id):
     })
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def add_product(request):
     data = request.data
     add_form = ProductSerializer(data=data)
@@ -53,7 +53,7 @@ def add_product(request):
         return Response(add_form.errors)
     
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def update_product(request,id):
     data = request.data
     product = get_object_or_404(Product,id=id)
@@ -73,7 +73,7 @@ def update_product(request,id):
     return Response(serializer)
 
 @api_view(['delete'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def delete_product(request,id):
     product = get_object_or_404(Product,id=id)
 
@@ -118,7 +118,7 @@ def create_review(request,id):
         return Response({'data':serial})
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated,IsAdminUser])
 def delete_review(request,id,pk):
     product = get_object_or_404(Product,id=id)
     review = product.product_review.filter(user=request.user,id=pk)
