@@ -24,10 +24,36 @@ def order_detail(request,id):
     return Response({'data':serializer},
                     status=status.HTTP_200_OK)
 
-@api_view(['GET'])
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_order(request,id):
+    data = request.data
+    user = request.user
+    order = get_object_or_404(Orders,id=id)
+
+    if user != order.user:
+        return Response({"error":'you can not updete this order'},
+                        status=status.HTTP_400_BAD_REQUEST)
+    
+    order.address = data['address']
+    order.phone_num = data['phone_num']
+    order.status = data['status']
+    order.payment_mode = data['payment_mode']
+    order.save()
+    
+    serializer = OrderSerializer(order).data
+    return Response({'data':serializer},
+                    status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_order(request,id):
     order = get_object_or_404(Orders,id=id)
+
+    if request.user != order.user:
+        return Response({"error":'you can not delete this order'},
+                        status=status.HTTP_400_BAD_REQUEST)
+    
     order.delete()
     return Response({'data':'deleted successfully'},
                     status=status.HTTP_200_OK)
