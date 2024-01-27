@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
 
 from product.models import Product
 
@@ -19,9 +20,9 @@ PAYMENT_MODE = (
 
 class Orders(models.Model):
     user = models.ForeignKey(User, related_name='user_order', on_delete=models.CASCADE)
-    code = models.CharField(max_length=50, default="",blank=True)
+    code = models.CharField(max_length=50, default=get_random_string(10),blank=True)
     address = models.TextField(max_length=1000, help_text= 'please enter these data (country, city, state, street)',default="",blank=True)
-    phone_num = models.PositiveIntegerField( default=0,blank=True)
+    phone_num = models.CharField(max_length=100, default="",blank=True)
     status = models.CharField(max_length=50, choices=ORDER_STATUS,default='Processing',blank=True)
     total_amount = models.PositiveIntegerField( default=0,blank=True)
     payment_status = models.CharField(max_length=50, choices=PAYMENT_STATUS,default='Unpaid',blank=True)
