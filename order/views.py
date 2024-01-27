@@ -24,6 +24,14 @@ def order_detail(request,id):
     return Response({'data':serializer},
                     status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def delete_order(request,id):
+    order = get_object_or_404(Orders,id=id)
+    order.delete()
+    return Response({'data':'deleted successfully'},
+                    status=status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
