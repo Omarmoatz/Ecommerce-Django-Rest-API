@@ -1,35 +1,36 @@
-# Dj-Amazon-Clone
+# Ecommerce-Django-Rest-API
 
-Dj-Amazon-Clone is an Amazon clone web application built using Python, Django, Django REST Framework, and JavaScript. It aims to replicate the core functionality and user experience of the popular e-commerce platform, Amazon.
+Ecommerce-Django-Rest-API is a Django project focused on building a RESTful API for an e-commerce application. The project aims to provide functionality for user authentication, product management, and order processing.
 
 ## Technologies Used
 
-The following technologies have been utilized in the development of Dj-Amazon-Clone:
+The following technologies have been utilized in the development of the Ecommerce-Django-Rest-API:
 
 - **Python**: The core programming language used for building the backend logic and handling server-side operations.
 - **Django**: A high-level Python web framework that provides a robust set of tools and libraries for building web applications. Django is used for handling URL routing, managing database models, and implementing business logic.
 - **Django REST Framework**: A powerful and flexible toolkit for building Web APIs, enabling the creation of RESTful APIs to support frontend interactions.
-- **JavaScript**: Used for client-side interactivity and enhancing the user experience.
-- **HTML**: The markup language used for structuring the web pages and defining the content.
-- **CSS**: Cascading Style Sheets are used for styling the web pages and defining the visual presentation.
+- **PostgreSQL**: An open-source relational database management system used for storing and retrieving data related to users, products, and orders.
 - **Postman**: A popular API development and testing tool used for testing and debugging the API endpoints.
-- **SQLite**: A lightweight and serverless database engine used for development and testing purposes.
-
+- **CRUD Operations**: The project includes Create, Read, Update, and Delete (CRUD) operations, allowing users to perform essential operations on the resources.
+- **Authentication**: User authentication is implemented using Django's built-in authentication system or third-party libraries such as Django-REST-Auth or JWT (JSON Web Tokens).
+- **Product Management**: The API supports operations related to managing products, such as creating new products, retrieving product details, updating product information, and deleting products.
+- **Order Processing**: The API provides endpoints for creating new orders, retrieving order details, updating order status, and managing order-related operations.
+- **Python Packages**: The project may utilize various Python packages and libraries to enhance functionality and improve development efficiency.
 
 ## Installation
 
-To set up and run Dj-Amazon-Clone locally, follow these steps:
+To set up and run the Ecommerce-Django-Rest-API locally, follow these steps:
 
 1. Clone the repository using the following command:
 
    ```
-   git clone https://github.com/Omarmoatz/Dj-Amazon-Clone.git
+   git clone https://github.com/Omarmoatz/Ecommerce-Django-Rest-API.git
    ```
 
 2. Navigate to the project directory:
 
    ```
-   cd Dj-Amazon-Clone
+   cd Ecommerce-Django-Rest-API
    ```
 
 3. Create a virtual environment to isolate the project's dependencies:
@@ -70,7 +71,7 @@ To set up and run Dj-Amazon-Clone locally, follow these steps:
    python manage.py runserver
    ```
 
-8. Open your web browser and access the application at `http://localhost:8000`.
+8. Open your web browser or use Postman to access the API endpoints at `http://localhost:8000` or as specified in the project configuration.
 
 ## Contributing
 
